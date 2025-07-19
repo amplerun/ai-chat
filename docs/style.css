@@ -1,0 +1,216 @@
+/* --- Basic Reset & Setup --- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #EAEBF1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #333;
+}
+#app-container {
+    width: 900px;
+    height: 95vh;
+    max-height: 800px;
+    background-color: #fff;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    overflow: hidden;
+    display: flex;
+}
+.screen { display: none; width: 100%; }
+.screen.active { display: flex; }
+
+/* --- Auth Screen --- */
+#auth-screen {
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.auth-form {
+    width: 320px;
+    text-align: center;
+}
+.auth-form h1 { font-weight: 700; color: #5B2D90; margin-bottom: 8px; }
+.auth-form p { color: #777; margin-bottom: 24px; }
+.input-group { margin-bottom: 16px; }
+.input-group input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+.auth-form button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: #6D42A3;
+    color: white;
+    margin-bottom: 12px;
+}
+.auth-form button.secondary { background-color: #f0f0f0; color: #555; }
+.error-message { color: #D93025; min-height: 20px; font-size: 14px; }
+.auth-note { margin-top: 20px; font-size: 12px; color: #888; background: #f5f5f5; padding: 10px; border-radius: 5px;}
+
+/* --- Main App Layout --- */
+#main-app {
+    display: flex;
+    flex-direction: row;
+}
+#list-view {
+    width: 35%;
+    border-right: 1px solid #EAEBF1;
+    display: flex;
+    flex-direction: column;
+}
+#chat-view, #amara-view {
+    width: 65%;
+    display: none;
+    flex-direction: column;
+}
+#chat-view.active, #amara-view.active {
+    display: flex;
+}
+
+/* --- List View (Left Panel) --- */
+.list-header {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.user-greeting { font-size: 24px; font-weight: 300; }
+.header-icons svg {
+    width: 24px;
+    height: 24px;
+    fill: #888;
+    margin-left: 16px;
+    cursor: pointer;
+}
+.tab-selector {
+    padding: 0 20px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.tab-selector .tab {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    background-color: #F0F2F5;
+    font-size: 14px;
+    cursor: pointer;
+}
+.tab-selector .tab.active {
+    background-color: #6D42A3;
+    color: white;
+}
+.chat-list {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+.chat-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    cursor: pointer;
+}
+.chat-item.active { background-color: #F0F2F5; }
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+}
+.chat-details { flex-grow: 1; }
+.chat-name { font-weight: 500; }
+.chat-preview { font-size: 14px; color: #666; }
+.chat-info { font-size: 12px; color: #888; }
+#logout-btn { padding: 15px; background: #f0f0f0; border: none; cursor: pointer; font-weight: 500; }
+
+/* --- Chat View (Right Panel) --- */
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #6D42A3;
+    color: white;
+}
+.contact-info { display: flex; align-items: center; }
+.contact-name { font-weight: 500; }
+.contact-status { font-size: 13px; opacity: 0.8; }
+.chat-header .header-icons svg { fill: white; }
+.message-container {
+    flex-grow: 1;
+    background-color: #5B2D90;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+.message-bubble {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 18px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+    font-size: 15px;
+}
+.message-bubble.sent {
+    background-color: #250742;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+.message-bubble.received {
+    background-color: #fff;
+    color: #333;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+}
+.chat-input-bar {
+    display: flex;
+    padding: 10px 20px;
+    background-color: #6D42A3;
+    align-items: center;
+}
+#message-input, #amara-message-input {
+    flex-grow: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 22px;
+    background-color: #fff;
+    font-size: 15px;
+}
+#message-input:focus, #amara-message-input:focus { outline: none; }
+#send-btn, #send-amara-btn {
+    background-color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+    cursor: pointer;
+}
+#send-btn svg, #send-amara-btn svg {
+    fill: #6D42A3;
+    width: 24px;
+    height: 24px;
+}
+/* Amara View Specifics */
+#amara-view .chat-header { background-color: #1a1a2e; }
+#amara-view .message-container { background-color: #0d0d1a; }
+#amara-view .chat-input-bar { background-color: #1a1a2e; }
+#amara-view .message-bubble.sent { background-color: #007BFF; border-bottom-right-radius: 4px; }
+#amara-view .message-bubble.received { background-color: #2a2a3e; color: #f0f0f0; border-bottom-left-radius: 4px; }

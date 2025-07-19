@@ -1,0 +1,14 @@
+{
+  "name": "amara-chat-server",
+  "version": "1.0.0",
+  "description": "Real-time WebSocket server for Amara Chat",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^8.13.0"
+  }
+}

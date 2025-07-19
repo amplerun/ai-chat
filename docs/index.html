@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Amara Chat</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="app-container">
+        <!-- ===== LOGIN/REGISTER SCREEN ===== -->
+        <div id="auth-screen" class="screen active">
+            <div class="auth-form">
+                <h1>Welcome to Amara</h1>
+                <p>Please sign in to continue.</p>
+                <div class="input-group">
+                    <input type="text" id="username" placeholder="Username">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Password">
+                </div>
+                <div id="auth-error" class="error-message"></div>
+                <button id="login-btn">Login</button>
+                <button id="register-btn" class="secondary">Register</button>
+                <div class="auth-note">
+                    <p><strong>Prototype Note:</strong> Please register "user1" and "user2". They are hardcoded as partners. Log in with each in a separate browser tab to test.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MAIN CHAT APP SCREEN ===== -->
+        <div id="main-app" class="screen">
+            <!-- LIST VIEW (Left side, only one chat) -->
+            <div id="list-view">
+                <header class="list-header">
+                    <div class="user-greeting">Hello, <span id="current-username">User</span></div>
+                    <div class="header-icons">
+                        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                    </div>
+                </header>
+                <div class="tab-selector">
+                    <button class="tab active">All Chats</button>
+                    <button class="tab">Amara</button>
+                </div>
+                <div class="chat-list">
+                    <div class="chat-item active" id="partner-chat-item">
+                        <img id="partner-profile-pic" src="default.png" alt="" class="avatar">
+                        <div class="chat-details">
+                            <div class="chat-name" id="partner-username">Partner</div>
+                            <div class="chat-preview" id="last-message-preview">Ok. Let me check</div>
+                        </div>
+                        <div class="chat-info">
+                            <div class="chat-time" id="last-message-time">09:38 AM</div>
+                        </div>
+                    </div>
+                </div>
+                 <button id="logout-btn">Logout</button>
+            </div>
+
+            <!-- CHAT VIEW (Right side) -->
+            <div id="chat-view">
+                <header class="chat-header">
+                    <div class="contact-info">
+                        <img id="chat-header-profile-pic" src="default.png" alt="" class="avatar">
+                        <div>
+                            <div class="contact-name" id="chat-header-username">Partner</div>
+                            <div class="contact-status">Online</div>
+                        </div>
+                    </div>
+                    <div class="header-icons">
+                        <svg viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                    </div>
+                </header>
+                <main id="message-container" class="message-container"></main>
+                <footer class="chat-input-bar">
+                    <input type="text" id="message-input" placeholder="Type a message...">
+                    <button id="send-btn">
+                         <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                    </button>
+                </footer>
+            </div>
+            
+             <!-- AMARA VIEW (Also right side) -->
+            <div id="amara-view">
+                 <header class="chat-header">
+                    <div class="contact-info">
+                        <img src="amara-avatar.png" alt="" class="avatar">
+                        <div>
+                            <div class="contact-name">Amara</div>
+                            <div class="contact-status">Your AI Companion</div>
+                        </div>
+                    </div>
+                </header>
+                <main id="amara-message-container" class="message-container"></main>
+                 <footer class="chat-input-bar">
+                    <input type="text" id="amara-message-input" placeholder="Tell Amara a secret...">
+                    <button id="send-amara-btn">
+                         <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                    </button>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
