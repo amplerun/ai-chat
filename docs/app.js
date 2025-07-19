@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // === CONFIGURATION ===
-    const API_BASE_URL = `https://${window.location.hostname.replace('3000', '80')}/api`;
-    const WEBSOCKET_URL = `wss://${window.location.hostname.replace('3000', '8080')}`;
+    const API_BASE_URL = 'https://special-halibut-q7q56qj4p7xxfr76-80.app.github.dev/api';
+    const WEBSOCKET_URL = 'https://special-halibut-q7q56qj4p7xxfr76-8080.app.github.dev/';
 
     // === STATE ===
     let state = {
