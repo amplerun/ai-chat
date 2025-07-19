@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // === CONFIGURATION ===
+    // === CONFIGURATION (Hardcoded from your specific Codespace) ===
     const API_BASE_URL = 'https://special-halibut-q7q56qj4p7xxfr76-80.app.github.dev/api';
-    const WEBSOCKET_URL = 'https://special-halibut-q7q56qj4p7xxfr76-8080.app.github.dev/';
+    const WEBSOCKET_URL = 'wss://special-halibut-q7q56qj4p7xxfr76-8080.app.github.dev';
 
     // === STATE ===
     let state = {
@@ -63,8 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const handleLogin = async () => {
-        const username = authElements.usernameInput.value;
-        const password = authElements.passwordInput.value;
+        const username = authElements.usernameInput.value.trim();
+        const password = authElements.passwordInput.value.trim();
         if (!username || !password) {
             setAuthError('Please enter both username and password.');
             return;
@@ -76,17 +76,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ username, password })
             });
             const data = await response.json();
-            if (!response.ok) throw new Error(data.message);
+            if (!response.ok) throw new Error(data.message || 'Login failed.');
             
             initializeMainApp(data.userData, data.partnerData);
         } catch (error) {
             setAuthError(error.message);
+            console.error("Login Error:", error);
         }
     };
 
     const handleRegister = async () => {
-        const username = authElements.usernameInput.value;
-        const password = authElements.passwordInput.value;
+        const username = authElements.usernameInput.value.trim();
+        const password = authElements.passwordInput.value.trim();
         if (!username || !password) {
             setAuthError('Please enter both username and password.');
             return;
@@ -98,11 +99,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ username, password })
             });
             const data = await response.json();
-            if (!response.ok) throw new Error(data.message);
+            if (!response.ok) throw new Error(data.message || 'Registration failed.');
             setAuthError('Registration successful! Please log in.');
             authElements.passwordInput.value = '';
         } catch (error) {
             setAuthError(error.message);
+            console.error("Register Error:", error);
         }
     };
     
@@ -110,13 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
         state.currentUser = userData;
         state.partner = partnerData;
         
-        // Update UI with user/partner info
         mainAppElements.currentUsername.textContent = userData.username;
         mainAppElements.partnerUsername.textContent = partnerData.username;
         mainAppElements.chatHeaderUsername.textContent = partnerData.username;
-        // In a real app, you'd fetch profile pics. Using a placeholder for now.
-        // mainAppElements.partnerProfilePic.src = partnerData.profilePic;
-        // mainAppElements.chatHeaderProfilePic.src = partnerData.profilePic;
         
         switchScreen('main');
         loadChatHistory();
@@ -125,22 +123,30 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     
     const loadChatHistory = async () => {
-        const res = await fetch(`${API_BASE_URL}/get_chat_history.php?userId=${state.currentUser.id}&partnerId=${state.partner.id}`);
-        const messages = await res.json();
-        messageContainers.chat.innerHTML = '';
-        messages.forEach(msg => {
-            renderMessage('chat', msg.sender_id === state.currentUser.id ? 'sent' : 'received', msg.content);
-        });
-        updateLastMessage(messages[messages.length - 1]);
+        try {
+            const res = await fetch(`${API_BASE_URL}/get_chat_history.php?userId=${state.currentUser.id}&partnerId=${state.partner.id}`);
+            const messages = await res.json();
+            messageContainers.chat.innerHTML = '';
+            messages.forEach(msg => {
+                renderMessage('chat', msg.sender_id === state.currentUser.id ? 'sent' : 'received', msg.content);
+            });
+            updateLastMessage(messages[messages.length - 1]);
+        } catch (error) {
+            console.error("Failed to load chat history:", error);
+        }
     };
 
     const connectWebSocket = () => {
+        if (state.websocket) {
+            state.websocket.close();
+        }
         state.websocket = new WebSocket(WEBSOCKET_URL);
+
         state.websocket.onopen = () => {
             console.log('WebSocket Connected');
-            // Register this client with its user ID
             state.websocket.send(JSON.stringify({ type: 'register', userId: state.currentUser.id }));
         };
+
         state.websocket.onmessage = (event) => {
             const data = JSON.parse(event.data);
             if (data.type === 'chat' && data.senderId === state.partner.id) {
@@ -148,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateLastMessage({ content: data.content, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
             }
         };
+
         state.websocket.onclose = () => console.log('WebSocket Disconnected');
         state.websocket.onerror = (error) => console.error('WebSocket Error:', error);
     };
@@ -161,7 +168,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     
     const updateLastMessage = (msg) => {
-        if (!msg) return;
+        if (!msg || !msg.content) {
+            mainAppElements.lastMessagePreview.textContent = "No messages yet.";
+            mainAppElements.lastMessageTime.textContent = "";
+            return;
+        }
         mainAppElements.lastMessagePreview.textContent = msg.content.length > 25 ? msg.content.substring(0, 25) + '...' : msg.content;
         mainAppElements.lastMessageTime.textContent = msg.time || new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
     };
@@ -202,9 +213,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
             });
             const data = await response.json();
-            if (!response.ok) throw new Error(data.reply);
+            if (!response.ok) throw new Error(data.reply || "Unknown error from Amara.");
             renderMessage('amara', 'received', data.reply);
         } catch (error) {
+            console.error("Amara Error:", error);
             renderMessage('amara', 'received', 'Error: Could not get a response from Amara.');
         } finally {
             messageInputs.amara.disabled = false;
@@ -237,9 +249,9 @@ document.addEventListener('DOMContentLoaded', () => {
     authElements.loginBtn.addEventListener('click', handleLogin);
     authElements.registerBtn.addEventListener('click', handleRegister);
     sendButtons.chat.addEventListener('click', sendChatMessage);
-    messageInputs.chat.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChatMessage(); });
+    messageInputs.chat.addEventListener('keypress', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMessage(); } });
     sendButtons.amara.addEventListener('click', sendAmaraMessage);
-    messageInputs.amara.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendAmaraMessage(); });
+    messageInputs.amara.addEventListener('keypress', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendAmaraMessage(); } });
     mainAppElements.logoutBtn.addEventListener('click', logout);
     tabButtons.forEach(btn => {
         btn.addEventListener('click', () => {
