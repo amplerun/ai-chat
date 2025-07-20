@@ -1,4 +1,4 @@
-// This is the final, definitive, and complete version of app.js, incorporating all fixes.
+// FINAL VERIFIED VERSION - 2025-07-19
 
 // === CONFIGURATION ===
 const API_BASE_URL = 'https://special-halibut-q7q56qj4p7xxfr76-80.app.github.dev';
@@ -27,30 +27,20 @@ async function apiFetch(endpoint, data, method = 'POST', isFormData = false) {
             headers: {},
         };
         if (isFormData) {
-            options.body = data; // FormData sets its own Content-Type header
+            options.body = data;
         } else {
             options.headers['Content-Type'] = 'application/json';
             options.body = JSON.stringify(data);
         }
-        
         const response = await fetch(`${API_BASE_URL}/api/${endpoint}`, options);
-
-        if (!response.ok) {
-            // Try to get text for more detailed error messages
-            const errorText = await response.text();
-            throw new Error(`HTTP error! Status: ${response.status} - ${errorText}`);
-        }
-        
-        // Check if response has content before trying to parse as JSON
         const responseText = await response.text();
-        if (responseText) {
-            return JSON.parse(responseText);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status} - ${responseText}`);
         }
-        return {}; // Return empty object for empty responses
-
+        return responseText ? JSON.parse(responseText) : {};
     } catch (error) {
         console.error(`API Error (${endpoint}):`, error);
-        throw error; // Re-throw the error to be handled by the calling function
+        throw error;
     }
 }
 
@@ -68,10 +58,7 @@ const switchScreen = (screenName) => {
 const handleLogin = async () => {
     const username = authElements.usernameInput.value.trim();
     const password = authElements.passwordInput.value.trim();
-    if (!username || !password) {
-        setStatusMessage(authElements.errorMsg, 'Please enter username and password.', 'error');
-        return;
-    }
+    if (!username || !password) { setStatusMessage(authElements.errorMsg, 'Please enter username and password.', 'error'); return; }
     try {
         const data = await apiFetch('login.php', { username, password });
         initializeMainApp(data.userData, data.partnerData);
@@ -83,10 +70,7 @@ const handleLogin = async () => {
 const handleRegister = async () => {
     const username = authElements.usernameInput.value.trim();
     const password = authElements.passwordInput.value.trim();
-    if (!username || !password) {
-        setStatusMessage(authElements.errorMsg, 'Please enter username and password.', 'error');
-        return;
-    }
+    if (!username || !password) { setStatusMessage(authElements.errorMsg, 'Please enter username and password.', 'error'); return; }
     try {
         await apiFetch('register.php', { username, password });
         setStatusMessage(authElements.errorMsg, 'Registration successful! Please log in.', 'success');
@@ -141,9 +125,7 @@ const loadChatHistory = async () => {
 };
 
 const connectWebSocket = () => {
-    if (state.websocket) {
-        state.websocket.close();
-    }
+    if (state.websocket) state.websocket.close();
     state.websocket = new WebSocket(WEBSOCKET_URL);
     state.websocket.onopen = () => {
         console.log('WebSocket Connected');
