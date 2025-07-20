@@ -22,7 +22,7 @@ body { font-family: 'Roboto', sans-serif; background-color: #EAEBF1; display: fl
 .content-view.active { display: flex; }
 .list-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
 .user-greeting { font-size: 24px; font-weight: 300; }
-.header-icons svg { width: 24px; height: 24px; fill: #888; cursor: pointer; }
+.icon { width: 24px; height: 24px; fill: #888; cursor: pointer; }
 .tab-selector { padding: 0 20px; display: flex; gap: 10px; margin-bottom: 20px; }
 .tab-selector .tab { padding: 8px 16px; border-radius: 20px; border: none; background-color: #F0F2F5; font-size: 14px; cursor: pointer; }
 .tab-selector .tab.active { background-color: #6D42A3; color: white; }
@@ -40,7 +40,7 @@ body { font-family: 'Roboto', sans-serif; background-color: #EAEBF1; display: fl
 .contact-name { font-weight: 500; }
 .contact-status { font-size: 13px; opacity: 0.8; }
 .message-container { flex-grow: 1; background-color: #5B2D90; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; }
-.message-bubble { max-width: 70%; padding: 10px 15px; border-radius: 18px; margin-bottom: 10px; line-height: 1.4; font-size: 15px; }
+.message-bubble { max-width: 70%; padding: 10px 15px; border-radius: 18px; margin-bottom: 10px; line-height: 1.4; font-size: 15px; word-break: break-word; }
 .message-bubble.sent { background-color: #250742; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
 .message-bubble.received { background-color: #fff; color: #333; align-self: flex-start; border-bottom-left-radius: 4px; }
 .chat-input-bar { display: flex; padding: 10px 20px; background-color: #6D42A3; align-items: center; flex-shrink: 0; }
