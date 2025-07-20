@@ -3,63 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Amara Chat</title>
+    <title>Amara</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
     <div id="app-container">
         <!-- ===== LOGIN/REGISTER SCREEN ===== -->
         <div id="auth-screen" class="screen active">
-            <!-- (Auth form remains the same) -->
+            <div class="auth-form">
+                <h1>Welcome to Amara</h1>
+                <p>Please sign in to continue.</p>
+                <div class="input-group"><input type="text" id="username" placeholder="Username"></div>
+                <div class="input-group"><input type="password" id="password" placeholder="Password"></div>
+                <div id="auth-error" class="status-message error"></div>
+                <button id="login-btn">Login</button>
+                <button id="register-btn" class="secondary">Register</button>
+                <div class="auth-note"><p><strong>Prototype Note:</strong> Please register "user1" and "user2". They are partners.</p></div>
+            </div>
         </div>
 
         <!-- ===== MAIN CHAT APP SCREEN ===== -->
         <div id="main-app" class="screen">
             <div id="list-view">
-                <!-- (List view header remains the same) -->
+                <header class="list-header">
+                    <div class="user-greeting">Hello, <span id="current-username">User</span></div>
+                    <div class="header-icons">
+                        <svg id="settings-btn" viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
+                    </div>
+                </header>
+                <div class="tab-selector">
+                    <button class="tab active" data-view="chat-view">All Chats</button>
+                    <button class="tab" data-view="amara-view">Amara</button>
+                </div>
                 <div class="chat-list">
                     <div class="chat-item active" id="partner-chat-item">
                         <img id="partner-profile-pic" src="assets/default.png" alt="" class="avatar">
-                        <!-- (Rest of chat-item) -->
+                        <div class="chat-details">
+                            <div class="chat-name" id="partner-username">Partner</div>
+                            <div class="chat-preview" id="last-message-preview">Ok. Let me check</div>
+                        </div>
+                        <div class="chat-info"><div class="chat-time" id="last-message-time"></div></div>
                     </div>
                 </div>
                  <button id="logout-btn">Logout</button>
             </div>
-
-            <!-- ===== CONTENT VIEWS ===== -->
-            <div id="content-view-wrapper">
-                <div id="chat-view" class="content-view active">
-                    <!-- (Chat view remains the same) -->
-                </div>
-                <div id="amara-view" class="content-view">
-                    <!-- (Amara view remains the same) -->
-                </div>
-                <!-- NEW SETTINGS VIEW -->
-                <div id="settings-view" class="content-view">
-                    <header class="chat-header">
-                        <div class="contact-info"><div class="contact-name">Settings</div></div>
-                    </header>
-                    <main class="settings-container">
-                        <h2>Update Your Profile</h2>
-                        <div class="pfp-container">
-                            <img id="settings-profile-pic" src="assets/default.png" class="settings-avatar">
+            <div id="chat-view" class="content-view active">
+                <header class="chat-header">
+                    <div class="contact-info">
+                        <img id="chat-header-profile-pic" src="assets/default.png" alt="" class="avatar">
+                        <div>
+                            <div class="contact-name" id="chat-header-username">Partner</div>
+                            <div class="contact-status">Online</div>
                         </div>
-                        <p>Choose a new profile picture (JPG, PNG, GIF):</p>
-                        <input type="file" id="pfp-upload-input" accept="image/*">
-                        <button id="pfp-upload-btn">Upload & Save</button>
-                        <div id="upload-status" class="status-message"></div>
-                    </main>
-                </div>
+                    </div>
+                </header>
+                <main id="message-container" class="message-container"></main>
+                <footer class="chat-input-bar">
+                    <input type="text" id="message-input" placeholder="Type a message..."><button id="send-btn"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+                </footer>
             </div>
-            <!-- NEW BOTTOM NAVIGATION -->
-            <nav class="bottom-nav">
-                <button data-view="chat-view">Chats</button>
-                <button data-view="amara-view">Amara</button>
-                <button data-view="settings-view">Settings</button>
-            </nav>
+             <div id="amara-view" class="content-view">
+                 <header class="chat-header">
+                    <div class="contact-info"><img src="assets/amara-avatar.png" alt="" class="avatar"><div><div class="contact-name">Amara</div><div class="contact-status">Your AI Companion</div></div></div>
+                </header>
+                <main id="amara-message-container" class="message-container"></main>
+                 <footer class="chat-input-bar">
+                    <input type="text" id="amara-message-input" placeholder="Tell Amara a secret..."><button id="send-amara-btn"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+                </footer>
+            </div>
         </div>
     </div>
+    
+    <!-- ===== SETTINGS MODAL (hidden by default) ===== -->
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close-btn">×</span>
+            <h2>Profile Settings</h2>
+            <div class="pfp-container">
+                <img id="settings-profile-pic" src="assets/default.png" class="settings-avatar">
+            </div>
+            <div class="settings-group">
+                <label for="nickname-input">Display Name (Nickname)</label>
+                <input type="text" id="nickname-input" placeholder="Enter a nickname">
+                <button id="nickname-save-btn">Save Name</button>
+            </div>
+            <div class="settings-group">
+                <label for="pfp-upload-input">Update Profile Picture</label>
+                <input type="file" id="pfp-upload-input" accept="image/jpeg,image/png,image/gif">
+                <button id="pfp-upload-btn">Upload Picture</button>
+            </div>
+            <div id="settings-status" class="status-message"></div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
